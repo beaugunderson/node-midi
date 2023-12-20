@@ -5,18 +5,6 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@beaugunderson/midi@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@beaugunderson/midi@workspace:."
-  dependencies:
-    mocha: "npm:^10.2.0"
-    node-addon-api: "npm:^7.0.0"
-    node-gyp: "npm:^10.0.1"
-    pkg-prebuilds: "npm:^0.2.1"
-    should: "npm:^13.2.3"
-  languageName: unknown
-  linkType: soft
-
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -992,6 +980,18 @@ __metadata:
   checksum: abddfff7d873312e4ed4a5fb75ce893a5c4fb69e7fcb1dfa71c28a6b92a7f1ef6b62790dffb39181b5a82728ba8f2f32d229cf8cbe66769fe02cea7db4a555aa
   languageName: node
   linkType: hard
+
+"node-midi-temp@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "node-midi-temp@workspace:."
+  dependencies:
+    mocha: "npm:^10.2.0"
+    node-addon-api: "npm:^7.0.0"
+    node-gyp: "npm:^10.0.1"
+    pkg-prebuilds: "npm:^0.2.1"
+    should: "npm:^13.2.3"
+  languageName: unknown
+  linkType: soft
 
 "nopt@npm:^7.0.0":
   version: 7.2.0
