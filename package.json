@@ -1,5 +1,5 @@
 {
-  "name": "@beaugunderson/midi",
+  "name": "node-midi-temp",
   "version": "3.1.0-temporary",
   "scripts": {
     "install": "pkg-prebuilds-verify ./binding-options.js || node-gyp rebuild",
