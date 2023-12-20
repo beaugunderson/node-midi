@@ -71,5 +71,6 @@
     "vendor/rtmidi/RtMidi.cpp",
     "vendor/rtmidi/RtMidi.h",
     "prebuilds/"
-  ]
+  ],
+  "packageManager": "yarn@4.0.2"
 }
