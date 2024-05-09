@@ -51,11 +51,11 @@
   },
   "dependencies": {
     "node-addon-api": "^6.1.0",
-    "pkg-prebuilds": "^0.2.1"
+    "pkg-prebuilds": "^1.0.0"
   },
   "devDependencies": {
-    "mocha": "^10.2.0",
-    "node-gyp": "^10.0.1",
+    "mocha": "^10.4.0",
+    "node-gyp": "^10.1.0",
     "should": "^13.2.3"
   },
   "repository": {
@@ -72,5 +72,5 @@
     "vendor/rtmidi/RtMidi.h",
     "prebuilds/"
   ],
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.2.2"
 }
