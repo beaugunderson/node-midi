@@ -9,10 +9,11 @@ on:
 env:
   NAPI_VERSION: 7
   BINDING_NAME: midi
+  MACOSX_DEPLOYMENT_TARGET: "10.13"
 
 jobs:
   build-and-test:
-    name: Build ${{ matrix.arch }} on ${{ matrix.os }} ${{ matrix.libc }}
+    name: Build ${{ matrix.docker-arch || matrix.arch }} on ${{ matrix.docker-image || matrix.container || matrix.os }} ${{ matrix.libc }}
     runs-on: ${{ matrix.os }}
 
     strategy:
