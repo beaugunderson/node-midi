@@ -178,6 +178,10 @@ jobs:
     needs: bundle
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     # only run for tags
     if: contains(github.ref, 'refs/tags/')
 
