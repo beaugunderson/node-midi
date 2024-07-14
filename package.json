@@ -68,6 +68,7 @@
     "binding.gyp",
     "binding-options.js",
     "src/",
+    "lib/",
     "vendor/rtmidi/RtMidi.cpp",
     "vendor/rtmidi/RtMidi.h",
     "prebuilds/"
