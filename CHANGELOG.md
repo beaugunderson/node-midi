@@ -1,5 +1,9 @@
 # node-midi Changelog
 
+## Version 3.5.0
+
+- Add midi constants
+
 ## Version 3.4.0
 
 - Add windows-arm64 build
