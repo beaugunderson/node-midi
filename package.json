@@ -60,7 +60,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/julusian/node-midi.git"
+    "url": "https://github.com/Julusian/node-midi"
   },
   "files": [
     "midi.js",
