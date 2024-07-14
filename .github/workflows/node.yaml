@@ -207,6 +207,8 @@ jobs:
             echo "No Token"
           else
 
+            corepack enable
+
             PUBLISHED_VERSION=$(yarn npm info --json . | jq -c '.version' -r)
             THIS_VERSION=$(node -p "require('./package.json').version")
             # Simple bash helper to comapre version numbers
