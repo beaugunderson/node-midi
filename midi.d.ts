@@ -11,6 +11,8 @@ export type MidiMessage = number[];
 export type MidiCallback = (deltaTime: number, message: MidiMessage) => void;
 
 export class Input extends EventEmitter {
+    constructor()
+
     /** Close the midi port */
     closePort(): void;
     /** Close and dispose of the midi port */
@@ -49,6 +51,8 @@ export class Input extends EventEmitter {
 }
 
 export class Output {
+    constructor()
+    
     /** Close the midi port */
     closePort(): void;
     /** Close and dispose of the midi port */
