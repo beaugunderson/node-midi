@@ -7,8 +7,11 @@ on:
     branches-ignore:
       - "release-please-*"
   pull_request:
-    branches-ignore:
-      - "release-please-*"
+    paths-ignore:
+      # ingore release-please prs
+      - CHANGELOG.md
+      - package.json
+      - .release-please-manifest.json
 
 env:
   NAPI_VERSION: 7
