@@ -4,7 +4,11 @@ on:
   push:
     # tags:
     #   - v*
+    branches-ignore:
+      - "release-please-*"
   pull_request:
+    branches-ignore:
+      - "release-please-*"
 
 env:
   NAPI_VERSION: 7
