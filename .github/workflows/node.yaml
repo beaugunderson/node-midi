@@ -42,12 +42,12 @@ jobs:
             is-native: false
             node-version: 20.x # 18.x is missing the arm64 node.lib
           # macos
-          - os: macos-12
+          - os: macos-latest
             arch: arm64
-            is-native: false
-          - os: macos-12
-            arch: x64
             is-native: true
+          - os: macos-latest
+            arch: x64
+            is-native: false
           # linux
           - os: ubuntu-latest
             arch: x64
@@ -55,12 +55,12 @@ jobs:
             docker-arch: linux/amd64
             docker-image: node:18-buster
           # linux-libc
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: arm64
             is-native: false
             docker-arch: linux/arm64
             docker-image: node:18-buster
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: arm
             is-native: false
             docker-arch: linux/arm/v7
