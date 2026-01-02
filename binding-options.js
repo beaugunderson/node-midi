@@ -1,4 +1,4 @@
 module.exports = {
-  name: 'midi',
-  napi_versions: [7],
+	name: 'midi',
+	napi_versions: [7],
 }

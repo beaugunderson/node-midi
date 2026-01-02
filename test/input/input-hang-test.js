@@ -1,2 +1,2 @@
-var midi = require("../../midi.js");
-var input = new midi.Input();
+var midi = require('../../midi.js')
+var input = new midi.Input()

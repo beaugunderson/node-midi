@@ -1,1 +1,8 @@
 package.json
+.mypy_cache/
+.vscode
+.yarn
+src-cpp/
+dist/
+vendor/
+CHANGELOG.md

@@ -13,11 +13,13 @@ This is an api compatible alternative to [midi](https://www.npmjs.com/package/mi
 Prebuilds are available for all common platforms. If you are using an uncommon platform you may need a C++ compiler and Python 3.
 
 From npm:
+
 ```bash
 $ npm install @julusian/midi
 ```
 
 From source:
+
 ```bash
 $ git clone https://github.com/julusian/node-midi.git
 $ cd node-midi/
@@ -30,13 +32,11 @@ If you are using webpack, you will need to tell it to make the prebuilt binaries
 One way to do this is by using a plugin, to perform the copy:
 
 ```js
-  plugins: [
-    new CopyPlugin({
-      patterns: [
-        { from: "./node_modules/@julusian/midi/prebuilds", to: "./prebuilds" },
-      ],
-    }),
-  ]
+plugins: [
+	new CopyPlugin({
+		patterns: [{ from: './node_modules/@julusian/midi/prebuilds', to: './prebuilds' }],
+	}),
+]
 ```
 
 ## Usage
@@ -50,28 +50,28 @@ For list of midi status codes, see http://www.midi.org/techspecs/midimessages.ph
 ### Input
 
 ```js
-const midi = require('@julusian/midi');
+const midi = require('@julusian/midi')
 
 // Set up a new input.
-const input = new midi.Input();
+const input = new midi.Input()
 
 // Count the available input ports.
-input.getPortCount();
+input.getPortCount()
 
 // Get the name of a specified input port.
-input.getPortName(0);
+input.getPortName(0)
 
 // Configure a callback.
 input.on('message', (deltaTime, message) => {
-  // The message is an array of numbers corresponding to the MIDI bytes:
-  //   [status, data1, data2]
-  // https://www.cs.cf.ac.uk/Dave/Multimedia/node158.html has some helpful
-  // information interpreting the messages.
-  console.log(`m: ${message} d: ${deltaTime}`);
-});
+	// The message is an array of numbers corresponding to the MIDI bytes:
+	//   [status, data1, data2]
+	// https://www.cs.cf.ac.uk/Dave/Multimedia/node158.html has some helpful
+	// information interpreting the messages.
+	console.log(`m: ${message} d: ${deltaTime}`)
+})
 
 // Open the first available input port.
-input.openPort(0);
+input.openPort(0)
 
 // Sysex, timing, and active sensing messages are ignored
 // by default. To enable these message types, pass false for
@@ -80,38 +80,38 @@ input.openPort(0);
 // For example if you want to receive only MIDI Clock beats
 // you should use
 // input.ignoreTypes(true, false, true)
-input.ignoreTypes(false, false, false);
+input.ignoreTypes(false, false, false)
 
 // ... receive MIDI messages ...
 
 // Close the port when done.
-setTimeout(function() {
-  input.closePort();
-}, 100000);
+setTimeout(function () {
+	input.closePort()
+}, 100000)
 ```
 
 ### Output
 
 ```js
-const midi = require('@julusian/midi');
+const midi = require('@julusian/midi')
 
 // Set up a new output.
-const output = new midi.Output();
+const output = new midi.Output()
 
 // Count the available output ports.
-output.getPortCount();
+output.getPortCount()
 
 // Get the name of a specified output port.
-output.getPortName(0);
+output.getPortName(0)
 
 // Open the first available output port.
-output.openPort(0);
+output.openPort(0)
 
 // Send a MIDI message.
-output.sendMessage([176,22,1]);
+output.sendMessage([176, 22, 1])
 
 // Close the port when done.
-output.closePort();
+output.closePort()
 ```
 
 ### Virtual Ports
@@ -122,18 +122,18 @@ connect to. This can be done simply by calling openVirtualPort(portName) instead
 of openPort(portNumber).
 
 ```js
-const midi = require('@julusian/midi');
+const midi = require('@julusian/midi')
 
 // Set up a new input.
-const input = new midi.Input();
+const input = new midi.Input()
 
 // Configure a callback.
 input.on('message', (deltaTime, message) => {
-    console.log(`m: ${message} d: ${deltaTime}`);
-});
+	console.log(`m: ${message} d: ${deltaTime}`)
+})
 
 // Create a virtual input port.
-input.openVirtualPort("Test Input");
+input.openVirtualPort('Test Input')
 
 // A midi device "Test Input" is now available for other
 // software to send messages to.
@@ -141,7 +141,7 @@ input.openVirtualPort("Test Input");
 // ... receive MIDI messages ...
 
 // Close the port when done.
-input.closePort();
+input.closePort()
 ```
 
 The same can be done with output ports.
@@ -154,49 +154,49 @@ You can also use this library with streams! Here are the interfaces
 
 ```js
 // create a readable stream
-const stream1 = midi.createReadStream();
+const stream1 = midi.createReadStream()
 
 // createReadStream also accepts an optional `input` param
-const input = new midi.Input();
-input.openVirtualPort('hello world');
+const input = new midi.Input()
+input.openVirtualPort('hello world')
 
 const stream2 = midi.createReadStream(input)
 
-stream2.pipe(require('fs').createWriteStream('something.bin'));
+stream2.pipe(require('fs').createWriteStream('something.bin'))
 ```
 
 #### Writable Stream
 
 ```js
 // create a writable stream
-const stream1 = midi.createWriteStream();
+const stream1 = midi.createWriteStream()
 
 // createWriteStream also accepts an optional `output` param
-const output = new midi.Output();
-output.openVirtualPort('hello again');
+const output = new midi.Output()
+output.openVirtualPort('hello again')
 
-const stream2 = midi.createWriteStream(output);
+const stream2 = midi.createWriteStream(output)
 
-require('fs').createReadStream('something.bin').pipe(stream2);
+require('fs').createReadStream('something.bin').pipe(stream2)
 ```
 
 ## References
 
-  * https://www.music.mcgill.ca/~gary/rtmidi/
-  * http://syskall.com/how-to-write-your-own-native-nodejs-extension
+- https://www.music.mcgill.ca/~gary/rtmidi/
+- http://syskall.com/how-to-write-your-own-native-nodejs-extension
 
 ## Maintainers
 
-  * Julian Waller - [@julusian](https://github.com/julusian)
+- Julian Waller - [@julusian](https://github.com/julusian)
 
 ## Contributors
 
-  * Justin Latimer - [@justinlatimer](https://github.com/justinlatimer)
-  * Elijah Insua - [@tmpvar](https://github.com/tmpvar)
-  * Andrew Morton - [@drewish](https://github.com/drewish)
-  * Luc Deschenaux - [@luxigo](https://github.com/luxigo)
-  * Michael Alyn Miller - [@malyn](https://github.com/malyn)
-  * Hugo Hromic - [@hhromic](https://github.com/hhromic)
+- Justin Latimer - [@justinlatimer](https://github.com/justinlatimer)
+- Elijah Insua - [@tmpvar](https://github.com/tmpvar)
+- Andrew Morton - [@drewish](https://github.com/drewish)
+- Luc Deschenaux - [@luxigo](https://github.com/luxigo)
+- Michael Alyn Miller - [@malyn](https://github.com/malyn)
+- Hugo Hromic - [@hhromic](https://github.com/hhromic)
 
 ## License
 
