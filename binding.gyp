@@ -18,9 +18,9 @@
       ],
       'sources': [
         'vendor/rtmidi/RtMidi.cpp',
-        'src/input.cpp',
-        'src/output.cpp',
-        'src/midi.cpp'
+        'src-cpp/input.cpp',
+        'src-cpp/output.cpp',
+        'src-cpp/midi.cpp'
       ],
       'conditions': [
         ['OS=="linux"',

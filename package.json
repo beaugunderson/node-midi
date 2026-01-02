@@ -2,13 +2,19 @@
   "name": "@julusian/midi",
   "version": "3.6.1",
   "scripts": {
+    "prepare": "husky",
+    "lint:raw": "eslint",
+    "lint": "run lint:raw .",
+    "lint-fix": "run lint --fix",
     "install": "pkg-prebuilds-verify ./binding-options.js || node-gyp rebuild",
-    "build": "node-gyp build",
+    "build": "run build:ts && node-gyp build",
+    "build:ts": "rimraf dist && tsc -p tsconfig.build.json",
     "rebuild": "node-gyp clean configure build",
-    "test": "mocha test/unit/*.js && node test/virtual-loopback-test-automated.js"
+    "test": "mocha test/unit/*.js && node test/virtual-loopback-test-automated.js",
+    "license-validate": "sofie-licensecheck"
   },
-  "main": "midi.js",
-  "types": "midi.d.ts",
+  "main": "dist/midi.js",
+  "types": "dist/midi.d.ts",
   "description": "MIDI hardware IO",
   "author": {
     "name": "Julian Waller",
@@ -54,9 +60,17 @@
     "pkg-prebuilds": "^1.0.0"
   },
   "devDependencies": {
+    "@sofie-automation/code-standard-preset": "^3.2.0",
+    "@types/node": "^25.0.3",
+    "eslint": "^9.39.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "mocha": "^10.8.2",
     "node-gyp": "^10.3.1",
-    "should": "^13.2.3"
+    "prettier": "^3.7.4",
+    "rimraf": "^6.1.2",
+    "should": "^13.2.3",
+    "typescript": "~5.7.3"
   },
   "repository": {
     "type": "git",
@@ -67,11 +81,20 @@
     "midi.d.ts",
     "binding.gyp",
     "binding-options.js",
-    "src/",
-    "lib/",
+    "src-cpp/",
+    "dist/",
     "vendor/rtmidi/RtMidi.cpp",
     "vendor/rtmidi/RtMidi.h",
     "prebuilds/"
   ],
-  "packageManager": "yarn@4.12.0"
+  "packageManager": "yarn@4.12.0",
+  "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
+  "lint-staged": {
+    "*.{css,json,md,scss}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx,js,jsx}": [
+      "run lint:raw --fix"
+    ]
+  }
 }
