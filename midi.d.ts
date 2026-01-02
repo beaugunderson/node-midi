@@ -10,13 +10,18 @@ import { EventEmitter } from 'events';
 export type MidiMessage = number[];
 export type MidiCallback = (deltaTime: number, message: MidiMessage) => void;
 
-export class Input extends EventEmitter {
+export type MidiInputEvents = {
+    message: [deltaTime: number, message: MidiMessage]
+    messageBuffer: [deltaTime: number, message: Buffer]
+}
+
+export class Input extends EventEmitter<MidiInputEvents> {
     constructor()
 
     /**
      * Get the names of all available input ports
      */
-    getPortNames(): string[];
+    static getPortNames(): string[];
 
     /** Close the midi port */
     closePort(): void;
@@ -47,7 +52,6 @@ export class Input extends EventEmitter {
      */
     openVirtualPort(port: string): void;
 
-    on(event: 'message', callback: MidiCallback): this;
     /**
      * Set the size of the internal buffer used to cache incoming MIDI messages.
      * The default size is 2048 bytes. The count parameter specifies the number
@@ -63,8 +67,7 @@ export class Output {
     /**
      * Get the names of all available output ports
      */
-    getPortNames(): string[];
-
+    static getPortNames(): string[];
     
     /** Close the midi port */
     closePort(): void;

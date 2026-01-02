@@ -23,6 +23,7 @@ class Input extends EventEmitter {
     super()
     
     this.input = new midi.Input((deltaTime, message) => {
+      this.emit('messageBuffer', deltaTime, message)
       this.emit('message', deltaTime, Array.from(message.values()))
     })
   }
