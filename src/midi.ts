@@ -161,7 +161,9 @@ export function createReadStream(input?: Input): Stream {
 
 	stream.resume = function () {
 		stream.paused = false
-		while (stream.queue.length && stream.emit('data', stream.queue.shift())) {}
+		while (stream.queue.length && stream.emit('data', stream.queue.shift())) {
+			// handled in loop
+		}
 	}
 
 	return stream

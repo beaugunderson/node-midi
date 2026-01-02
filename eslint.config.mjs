@@ -2,4 +2,5 @@ import { generateEslintConfig } from '@sofie-automation/code-standard-preset/esl
 
 export default await generateEslintConfig({
 	testRunner: null,
+	ignores: ['test/**'],
 })

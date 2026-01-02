@@ -4,7 +4,7 @@
   "scripts": {
     "prepare": "husky",
     "lint:raw": "eslint",
-    "lint": "run lint:raw .",
+    "lint": "run lint:raw",
     "lint-fix": "run lint --fix",
     "install": "pkg-prebuilds-verify ./binding-options.js || node-gyp rebuild",
     "build": "run build:ts && node-gyp build",
@@ -91,10 +91,10 @@
   "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
   "lint-staged": {
     "*.{css,json,md,scss}": [
-      "prettier --write"
+      "prettier"
     ],
     "*.{ts,tsx,js,jsx}": [
-      "run lint:raw --fix"
+      "yarn lint:raw"
     ]
   }
 }
