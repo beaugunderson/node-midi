@@ -48,6 +48,8 @@ public:
 
     Napi::Value IgnoreTypes(const Napi::CallbackInfo &info);
     Napi::Value SetBufferSize(const Napi::CallbackInfo &info);
+
+    static Napi::Value GetInputPortNames(const Napi::CallbackInfo &info);
 };
 
 #endif // NODE_MIDI_INPUT_H

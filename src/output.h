@@ -26,6 +26,8 @@ public:
     Napi::Value IsPortOpen(const Napi::CallbackInfo &info);
 
     Napi::Value Send(const Napi::CallbackInfo &info);
+
+    static Napi::Value GetOutputPortNames(const Napi::CallbackInfo &info);
 };
 
 #endif // NODE_MIDI_OUTPUT_H

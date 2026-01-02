@@ -27,6 +27,8 @@ std::unique_ptr<Napi::FunctionReference> NodeMidiOutput::Init(const Napi::Env &e
     *constructor = Napi::Persistent(func);
     exports.Set("Output", func);
 
+    exports.Set("getOutputPortNames", Napi::Function::New(env, NodeMidiOutput::GetOutputPortNames));
+
     return constructor;
 }
 
@@ -236,4 +238,42 @@ Napi::Value NodeMidiOutput::Send(const Napi::CallbackInfo &info)
     }
 
     return env.Null();
+}
+
+Napi::Value NodeMidiOutput::GetOutputPortNames(const Napi::CallbackInfo &info)
+{
+    Napi::Env env = info.Env();
+    Napi::HandleScope scope(env);
+
+    std::unique_ptr<RtMidiOut> handle;
+
+    try
+    {
+        handle.reset(new RtMidiOut());
+    }
+    catch (RtMidiError &e)
+    {
+        Napi::Error::New(info.Env(), "Failed to initialise RtMidi").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    auto portCount = handle->getPortCount();
+
+    Napi::Array portNames = Napi::Array::New(env, portCount);
+
+    for (unsigned int i = 0; i < portCount; i++)
+    {
+        try
+        {
+            std::string name = handle->getPortName(i);
+            portNames.Set(i, Napi::String::New(env, name));
+        }
+        catch (RtMidiError &e)
+        {
+            Napi::TypeError::New(env, "Internal RtMidi error").ThrowAsJavaScriptException();
+            return env.Null();
+        }
+    }
+
+    return portNames;
 }

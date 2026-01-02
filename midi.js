@@ -27,6 +27,10 @@ class Input extends EventEmitter {
     })
   }
 
+  static getPortNames() {
+    return midi.getInputPortNames();
+  }
+
   closePort() {
     return this.input.closePort()
   }
@@ -67,6 +71,10 @@ class Input extends EventEmitter {
 class Output {
   constructor() {
     this.output = new midi.Output()
+  }
+
+  static getPortNames() {
+    return midi.getOutputPortNames();
   }
 
   closePort() {
