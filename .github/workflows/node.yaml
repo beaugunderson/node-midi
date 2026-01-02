@@ -53,18 +53,18 @@ jobs:
             arch: x64
             is-native: true
             docker-arch: linux/amd64
-            docker-image: node:18-buster
+            docker-image: node:18-bullseye
           # linux-libc
           - os: ubuntu-24.04-arm
             arch: arm64
             is-native: false
             docker-arch: linux/arm64
-            docker-image: node:18-buster
+            docker-image: node:18-bullseye
           - os: ubuntu-24.04-arm
             arch: arm
             is-native: false
             docker-arch: linux/arm/v7
-            docker-image: node:18-buster
+            docker-image: node:18-bullseye
           # linux-musl
           - os: ubuntu-latest
             arch: x64
@@ -132,9 +132,10 @@ jobs:
           run: |
             if command -v apt-get &> /dev/null
             then
-              # rewrite buster sources to archive mirrors
-              sed -i -E 's#https?://(deb|deb.debian).debian.org/debian#http://archive.debian.org/debian#g' /etc/apt/sources.list || true
-              sed -i -E 's#https?://security.debian.org#http://archive.debian.org/debian-security#g' /etc/apt/sources.list || true
+              # # rewrite sources to archive mirrors
+              # sed -i -E 's#https?://(deb|deb.debian).debian.org/debian#http://archive.debian.org/debian#g' /etc/apt/sources.list || true
+              # sed -i -E 's#https?://security.debian.org#http://archive.debian.org/debian-security#g' /etc/apt/sources.list || true
+
               
               apt-get update
               apt-get install -y libasound2-dev
