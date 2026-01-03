@@ -161,6 +161,84 @@ jobs:
           path: prebuilds
           retention-days: 1
 
+  test-nodejs:
+    name: Test Node.JS ${{matrix.version}} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [14, 18, 20, 22, 24]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.version}}
+
+      - name: Setup Environment
+        shell: bash
+        run: |
+          corepack enable
+
+          yarn install
+
+          yarn build
+        env:
+          npm_config_build_from_source: true
+
+      - name: Run tests
+        shell: bash
+        run: |
+          yarn test
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+
+      - name: Setup Environment
+        shell: bash
+        run: |
+          corepack enable
+
+          yarn install
+        env:
+          npm_config_build_from_source: true
+
+      - name: Run lint
+        shell: bash
+        run: |
+          yarn lint
+
   bundle:
     name: Bundle prebuilds
     needs: build-and-test
