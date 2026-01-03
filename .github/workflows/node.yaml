@@ -185,6 +185,8 @@ jobs:
             version: 16
           - os: windows-11-arm
             version: 18
+          - os: macos-latest
+            version: 14
 
     steps:
       - uses: actions/checkout@v6
