@@ -83,7 +83,9 @@ export class Input extends EventEmitter<MidiInputEvents> {
 						this.emit('sysex', message)
 					} else {
 						// Partial
-						this.#pendingSysexBuffer = Buffer.copyBytesFrom(message) // Clone buffer
+						this.#pendingSysexBuffer =
+							// eslint-disable-next-line n/no-unsupported-features/node-builtins
+							typeof Buffer.copyBytesFrom === 'function' ? Buffer.copyBytesFrom(message) : Buffer.concat([message]) // Clone buffer
 					}
 					return
 				}
