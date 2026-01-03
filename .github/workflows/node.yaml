@@ -169,7 +169,22 @@ jobs:
       fail-fast: false
       matrix:
         version: [14, 18, 20, 22, 24]
-        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-latest]
+        os: [
+            # Ubuntu runners don't have alsa enabled
+            # ubuntu-latest, ubuntu-24.04-arm,
+            windows-latest,
+            windows-11-arm,
+            macos-latest,
+          ]
+        exclude:
+          - os: ubuntu-24.04-arm
+            version: 14
+          - os: windows-11-arm
+            version: 14
+          - os: windows-11-arm
+            version: 16
+          - os: windows-11-arm
+            version: 18
 
     steps:
       - uses: actions/checkout@v6
@@ -183,10 +198,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libasound2-dev
 
+      # Build with latest Node.js to have the latest build tools
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.version}}
+          node-version: 22.x
 
       - name: Setup Environment
         shell: bash
@@ -199,10 +215,16 @@ jobs:
         env:
           npm_config_build_from_source: true
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.version}}
+
       - name: Run tests
         shell: bash
         run: |
-          yarn test
+          # Don't use yarn, because of possible node version incompatibilities
+          npm run test
 
   lint:
     name: Lint
