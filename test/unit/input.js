@@ -1,6 +1,6 @@
 var should = require('should')
 var EventEmitter = require('events').EventEmitter
-var Midi = require('../../midi')
+var Midi = require('../../dist/midi')
 describe('midi.Input', function () {
 	var input
 	beforeEach(() => {

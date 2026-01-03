@@ -1,4 +1,4 @@
-var midi = require('../midi.js')
+var midi = require('../dist/midi.js')
 
 var outputName = 'node-midi Virtual Output'
 var inputName = 'node-midi Virtual Input'

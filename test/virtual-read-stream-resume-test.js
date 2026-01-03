@@ -1,4 +1,4 @@
-var midi = require('../midi.js')
+var midi = require('../dist/midi.js')
 var virtualInput = new midi.Input()
 var output = new midi.Output()
 var assert = require('assert')

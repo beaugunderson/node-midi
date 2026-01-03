@@ -1,4 +1,4 @@
-var midi = require('../../midi.js')
+var midi = require('../../dist/midi.js')
 
 var output = new midi.Output()
 console.log(output.getPortCount())
