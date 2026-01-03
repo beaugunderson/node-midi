@@ -15,10 +15,13 @@ reader.on('data', function (buffer) {
 })
 
 for (var i = 0; i < output.getPortCount(); ++i) {
-	if (output.getPortName(i) === 'node-midi') {
+	if (output.getPortName(i).includes('node-midi')) {
 		output.openPort(i)
 		break
 	}
+}
+if (!output.isPortOpen()) {
+	throw new Error('Could not find virtual input port')
 }
 
 output.sendMessage(payload)

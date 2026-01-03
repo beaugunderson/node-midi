@@ -1,6 +1,7 @@
 import Stream from 'stream'
 import { EventEmitter } from 'events'
 import pkgPrebuilds from 'pkg-prebuilds'
+import path from 'path'
 
 // @ts-expect-error No types
 // eslint-disable-next-line n/no-missing-import
@@ -17,7 +18,7 @@ import { Notes } from './notes.js'
 /** Message names, including CCs */
 import { Messages } from './messages.js'
 
-const midi = pkgPrebuilds(__dirname, bindingOptions)
+const midi = pkgPrebuilds(path.join(__dirname, '..'), bindingOptions)
 
 /**
  * An array of numbers corresponding to the MIDI bytes: [status, data1, data2].
@@ -27,13 +28,26 @@ export type MidiMessage = number[]
 /** @deprecated */
 export type MidiCallback = (deltaTime: number, message: MidiMessage) => void
 
+export interface MidiEventInfo {
+	channel: number
+	deltaTime: number
+}
+
 export type MidiInputEvents = {
 	message: [deltaTime: number, message: MidiMessage]
 	messageBuffer: [deltaTime: number, message: Buffer]
+
+	sysex: [bytes: Buffer]
+
+	noteon: [note: number, velocity: number, info: MidiEventInfo]
+	noteoff: [note: number, velocity: number, info: MidiEventInfo]
+	cc: [param: number, value: number, info: MidiEventInfo]
 }
 
 export class Input extends EventEmitter<MidiInputEvents> {
 	readonly #input: any
+
+	#pendingSysexBuffer: Buffer | null = null
 
 	constructor() {
 		super()
@@ -41,6 +55,62 @@ export class Input extends EventEmitter<MidiInputEvents> {
 		this.#input = new midi.Input((deltaTime: number, message: Buffer) => {
 			this.emit('messageBuffer', deltaTime, message)
 			this.emit('message', deltaTime, Array.from(message.values()))
+
+			if (message.byteLength === 0) return
+			const lastByte = message[message.byteLength - 1]
+
+			// a long sysex can be sent in multiple chunks, depending on the RtMidi buffer size
+			let proceed = true
+			if (this.#pendingSysexBuffer && message.byteLength > 0) {
+				// If first byte is valid midi (7bit data)
+				if (message[0] < 0x80) {
+					this.#pendingSysexBuffer = Buffer.concat([this.#pendingSysexBuffer, message])
+					if (lastByte === 0xf7) {
+						this.emit('sysex', this.#pendingSysexBuffer)
+						this.#pendingSysexBuffer = null
+					}
+					proceed = false
+				} else {
+					// ignore invalid sysex messages
+					this.#pendingSysexBuffer = null
+				}
+			}
+			if (proceed) {
+				// Sysex
+				if (message[0] === 0xf0) {
+					if (lastByte === 0xf7) {
+						// Full
+						this.emit('sysex', message)
+					} else {
+						// Partial
+						this.#pendingSysexBuffer = Buffer.copyBytesFrom(message) // Clone buffer
+					}
+					return
+				}
+
+				const channel = message[0] & 0x0f
+				const type = message[0] & 0xf0
+				if (type === Messages.NOTE_ON) {
+					this.emit('noteon', message[1], message[2], { channel, deltaTime })
+				} else if (type === Messages.NOTE_OFF) {
+					this.emit('noteoff', message[1], message[2], { channel, deltaTime })
+				} else if (type === Messages.SET_PARAMETER) {
+					this.emit('cc', message[1], message[2], { channel, deltaTime })
+				} else {
+					// Future: more message types
+					//
+					// const data = this.parseMessage(message)
+					// if (data.type === 'sysex' && lastByte !== 0xf7) {
+					// 	this.#pendingSysexBuffer = Buffer.copyBytesFrom(message) // Clone buffer
+					// } else {
+					// 	data.msg._type = data.type // easy access to message type
+					// 	this.emit(data.type, data.msg)
+					// 	if (data.type === 'mtc') {
+					// 		this.parseMtc(data.msg)
+					// 	}
+					// }
+				}
+			}
 		})
 	}
 
@@ -140,60 +210,36 @@ export class Output {
 	}
 }
 
-export function createReadStream(input?: Input): Stream {
+export function createReadStream(input?: Input): Stream.Readable {
 	input = input || new Input()
-	const stream = new Stream()
-	stream.readable = true
-	stream.paused = false
-	stream.queue = []
 
-	input.on('messageBuffer', function (_deltaTime, packet) {
-		if (!stream.paused) {
-			stream.emit('data', packet)
-		} else {
-			stream.queue.push(packet)
-		}
+	const stream = new Stream.Readable({
+		objectMode: true,
+		read() {
+			// Data is pushed from the messageBuffer event handler
+		},
 	})
 
-	stream.pause = function () {
-		stream.paused = true
-	}
-
-	stream.resume = function () {
-		stream.paused = false
-		while (stream.queue.length && stream.emit('data', stream.queue.shift())) {
-			// handled in loop
-		}
-	}
+	input.on('messageBuffer', (_deltaTime, packet) => {
+		stream.push(packet)
+	})
 
 	return stream
 }
 
-export function createWriteStream(output?: Output): Stream {
+export function createWriteStream(output?: Output): Stream.Writable {
 	output = output || new Output()
-	const stream = new Stream()
-	stream.writable = true
-	stream.paused = false
-	stream.queue = []
 
-	stream.write = function (d) {
-		if (Buffer.isBuffer(d)) {
-			d = Array.prototype.slice.call(d, 0)
-		}
-
-		output.sendMessage(d)
-
-		return !this.paused
-	}
-
-	stream.end = function (buf) {
-		if (buf) stream.write(buf)
-		stream.writable = false
-	}
-
-	stream.destroy = function () {
-		stream.writable = false
-	}
+	const stream = new Stream.Writable({
+		objectMode: true,
+		write(chunk: Buffer | number[], _encoding, callback) {
+			if (!Buffer.isBuffer(chunk)) {
+				chunk = Buffer.from(chunk)
+			}
+			output.sendMessage(chunk)
+			callback()
+		},
+	})
 
 	return stream
 }
