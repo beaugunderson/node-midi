@@ -58,17 +58,15 @@
         ],
         ['OS=="win"',
           {
-            'configurations': {
-              'Release': {
-                'msvs_settings': {
-                  'VCCLCompilerTool': {
-                    'ExceptionHandling': 1
-                  }
-                }
+            'msvs_settings': {
+              'VCCLCompilerTool': {
+                'ExceptionHandling': 1,
+                'AdditionalOptions': ['/await', '/bigobj', '/std:c++17']
               }
             },
             'defines': [
               '__WINDOWS_MM__',
+              '__WINDOWS_UWP__',
               'RTMIDI_DO_NOT_ENSURE_UNIQUE_PORTNAMES'
             ],
             'link_settings': {
