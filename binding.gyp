@@ -71,7 +71,8 @@
             ],
             'link_settings': {
               'libraries': [
-                '-lwinmm.lib'
+                '-lwinmm.lib',
+                '-lruntimeobject.lib'
               ],
             }
           }
