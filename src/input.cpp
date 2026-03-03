@@ -35,6 +35,16 @@ std::unique_ptr<Napi::FunctionReference> NodeMidiInput::Init(const Napi::Env &en
     return constructor;
 }
 
+static RtMidi::Api parseApi(const std::string &name)
+{
+    if (name == "winmm") return RtMidi::WINDOWS_MM;
+    if (name == "uwp") return RtMidi::WINDOWS_UWP;
+    if (name == "core") return RtMidi::MACOSX_CORE;
+    if (name == "alsa") return RtMidi::LINUX_ALSA;
+    if (name == "jack") return RtMidi::UNIX_JACK;
+    return RtMidi::UNSPECIFIED;
+}
+
 NodeMidiInput::NodeMidiInput(const Napi::CallbackInfo &info) : Napi::ObjectWrap<NodeMidiInput>(info)
 {
     if (info.Length() == 0 || !info[0].IsFunction())
@@ -43,9 +53,15 @@ NodeMidiInput::NodeMidiInput(const Napi::CallbackInfo &info) : Napi::ObjectWrap<
         return;
     }
 
+    RtMidi::Api api = RtMidi::UNSPECIFIED;
+    if (info.Length() >= 2 && info[1].IsString())
+    {
+        api = parseApi(info[1].ToString().Utf8Value());
+    }
+
     try
     {
-        handle.reset(new RtMidiIn());
+        handle.reset(new RtMidiIn(api));
 
         handle->setBufferSize(2048, 4);
     }

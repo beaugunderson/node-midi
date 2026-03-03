@@ -19,12 +19,12 @@ const Notes = require('./lib/notes');
 const Messages = require('./lib/messages');
 
 class Input extends EventEmitter {
-  constructor() {
+  constructor(api) {
     super()
-    
+
     this.input = new midi.Input((deltaTime, message) => {
       this.emit('message', deltaTime, Array.from(message.values()))
-    })
+    }, api)
   }
 
   closePort() {
@@ -65,8 +65,8 @@ class Input extends EventEmitter {
 }
 
 class Output {
-  constructor() {
-    this.output = new midi.Output()
+  constructor(api) {
+    this.output = new midi.Output(api)
   }
 
   closePort() {

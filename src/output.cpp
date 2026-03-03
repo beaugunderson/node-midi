@@ -30,11 +30,27 @@ std::unique_ptr<Napi::FunctionReference> NodeMidiOutput::Init(const Napi::Env &e
     return constructor;
 }
 
+static RtMidi::Api parseApi(const std::string &name)
+{
+    if (name == "winmm") return RtMidi::WINDOWS_MM;
+    if (name == "uwp") return RtMidi::WINDOWS_UWP;
+    if (name == "core") return RtMidi::MACOSX_CORE;
+    if (name == "alsa") return RtMidi::LINUX_ALSA;
+    if (name == "jack") return RtMidi::UNIX_JACK;
+    return RtMidi::UNSPECIFIED;
+}
+
 NodeMidiOutput::NodeMidiOutput(const Napi::CallbackInfo &info) : Napi::ObjectWrap<NodeMidiOutput>(info)
 {
+    RtMidi::Api api = RtMidi::UNSPECIFIED;
+    if (info.Length() >= 1 && info[0].IsString())
+    {
+        api = parseApi(info[0].ToString().Utf8Value());
+    }
+
     try
     {
-        handle.reset(new RtMidiOut());
+        handle.reset(new RtMidiOut(api));
     }
     catch (RtMidiError &e)
     {
