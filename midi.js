@@ -174,9 +174,20 @@ function createWriteStream(output) {
   return stream;
 };
 
+const Api = Object.freeze({
+  UNSPECIFIED: undefined,
+  CORE: 'core',
+  ALSA: 'alsa',
+  JACK: 'jack',
+  WINMM: 'winmm',
+  UWP: 'uwp',
+});
+
 module.exports = {
   Input,
   Output,
+
+  Api,
 
   createReadStream,
   createWriteStream,
@@ -187,7 +198,7 @@ module.exports = {
     Notes,
     Messages,
   },
-  
+
   // Backwards compatibility.
   input: Input,
   output: Output,
