@@ -3252,7 +3252,14 @@ class UWPMidiInit
 public:
     UWPMidiInit()
     {
-        winrt::init_apartment();
+        try
+        {
+            winrt::init_apartment();
+        }
+        catch (winrt::hresult_error const&)
+        {
+            // Already initialized (e.g. Electron/Chromium sets up STA).
+        }
     }
 };
 
