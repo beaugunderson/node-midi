@@ -1,6 +1,6 @@
 {
   "name": "@beaugunderson/midi",
-  "version": "3.7.0-uwp.3",
+  "version": "3.7.0-uwp.4",
   "scripts": {
     "install": "pkg-prebuilds-verify ./binding-options.js || node-gyp rebuild",
     "build": "node-gyp build",
